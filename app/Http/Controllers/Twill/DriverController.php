@@ -3,21 +3,19 @@
 namespace App\Http\Controllers\Twill;
 
 use A17\Twill\Models\Contracts\TwillModelContract;
-
 use A17\Twill\Services\Forms\Fields\Browser;
-use A17\Twill\Services\Forms\Fields\Wysiwyg;
+use A17\Twill\Services\Listings\Columns\Text;
 use A17\Twill\Services\Listings\Columns\Browser as BrowserColumn;
-use A17\Twill\Services\Listings\Columns\Image;
 use A17\Twill\Services\Listings\TableColumns;
 use A17\Twill\Services\Forms\Fields\Input;
-use A17\Twill\Services\Forms\Fields\Medias;
 use A17\Twill\Services\Forms\Form;
 use A17\Twill\Http\Controllers\Admin\ModuleController as BaseModuleController;
 use App\Models\Driver;
+use App\Models\Vehicle;
 
-class VehicleController extends BaseModuleController
+class DriverController extends BaseModuleController
 {
-    protected $moduleName = 'vehicles';
+    protected $moduleName = 'drivers';
     /**
      * This method can be used to enable/disable defaults. See setUpController in the docs for available options.
      */
@@ -36,22 +34,11 @@ class VehicleController extends BaseModuleController
         $form = parent::getForm($model);
 
         $form->add(
-            Wysiwyg::make()->name('description')->label('Description')
+            Input::make()->name('description')->label('Description')
         );
 
         $form->add(
-            Browser::make()
-                ->modules(['driver'])
-                ->buttonOnTop()
-                ->wide()
-                ->name('driver')
-                ->label('Driver')
-        );
-
-        $form->add(
-            Medias::make()
-                ->name('cover')
-                ->label('Images'),
+            Browser::make()->name('vehicle')->modules([Vehicle::class])
         );
 
         return $form;
@@ -65,9 +52,19 @@ class VehicleController extends BaseModuleController
         $table = parent::additionalIndexTableColumns();
 
         $table->add(
-            Image::make()
-                ->field('cover')
-                ->crop('default')
+            Text::make()->field('name')->title('Name')->customRender(function(Driver $driver) {
+                return $driver->user->name;
+            })
+        );
+
+        $table->add(
+            BrowserColumn::make()
+                ->browser('vehicle')
+                ->field('title')
+                ->title('Vehicle')
+                ->linkCell(function($vehicle) {
+                    return route('twill.vehicles.show', ['vehicle' => $vehicle]);
+                })
         );
 
         return $table;

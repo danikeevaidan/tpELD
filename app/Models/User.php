@@ -47,7 +47,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function vehicle() : HasOne {
-        return $this->hasOne(Vehicle::class);
+    public function driver(): HasOne {
+        return $this->hasOne(Driver::class);
     }
 }

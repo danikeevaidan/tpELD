@@ -8,16 +8,16 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('vehicles', function (Blueprint $table) {
+        Schema::create('drivers', function (Blueprint $table) {
             // this will create an id, a "published" column, and soft delete and timestamps columns
             createDefaultTableFields($table);
 
             // feel free to modify the name of this column, but title is supported by default (you would need to specify the name of the column Twill should consider as your "title" column in your module controller if you change it)
             $table->string('title', 200)->nullable();
-            $table->foreignId('driver_id')->nullable()->constrained('drivers')->nullOnDelete();
 
             // your generated model and form include a description field, to get you started, but feel free to get rid of it if you don't need it
             $table->text('description')->nullable();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 
             $table->integer('position')->unsigned()->nullable();
 
@@ -26,19 +26,19 @@ return new class extends Migration
             // $table->timestamp('publish_end_date')->nullable();
         });
 
-        Schema::create('vehicle_slugs', function (Blueprint $table) {
-            createDefaultSlugsTableFields($table, 'vehicle');
+        Schema::create('driver_slugs', function (Blueprint $table) {
+            createDefaultSlugsTableFields($table, 'driver');
         });
 
-        Schema::create('vehicle_revisions', function (Blueprint $table) {
-            createDefaultRevisionsTableFields($table, 'vehicle');
+        Schema::create('driver_revisions', function (Blueprint $table) {
+            createDefaultRevisionsTableFields($table, 'driver');
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('vehicle_revisions');
-        Schema::dropIfExists('vehicle_slugs');
-        Schema::dropIfExists('vehicles');
+        Schema::dropIfExists('driver_revisions');
+        Schema::dropIfExists('driver_slugs');
+        Schema::dropIfExists('drivers');
     }
 };

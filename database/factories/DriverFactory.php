@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Vehicle>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Driver>
  */
-class VehicleFactory extends Factory
+class DriverFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,9 +17,9 @@ class VehicleFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->word(),
+            'title' => $this->faker->title(),
             'description' => $this->faker->text(),
-            'driver_id' => $this->faker->numberBetween(1, 10),
+            'user_id' => $this->faker->numberBetween(1, 10),
         ];
     }
 }

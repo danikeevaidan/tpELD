@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use A17\Twill\Models\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Vehicle extends Model implements Sortable
+class Driver extends Model implements Sortable
 {
     use HasSlug, HasMedias, HasFiles, HasRevisions, HasPosition, HasFactory, HasRelated;
 
@@ -28,26 +28,11 @@ class Vehicle extends Model implements Sortable
         'title',
     ];
 
-    public $mediasParams = [
-        'cover' => [
-            'default' => [
-                [
-                    'name' => 'default',
-                    'ratio' => 16 / 9,
-                ],
-            ],
-            'mobile' => [
-                [
-                    'name' => 'mobile',
-                    'ratio' => 1,
-                ],
-            ],
-        ],
-    ];
-
-    public function driver() {
-        return $this->belongsTo(Driver::class);
+    public function user(): BelongsTo {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-
+    public function vehicle() {
+        return $this->hasOne(Vehicle::class);
+    }
 }
