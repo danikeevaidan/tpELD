@@ -19,7 +19,6 @@ class VehicleFactory extends Factory
         return [
             'title' => $this->faker->word(),
             'description' => $this->faker->text(),
-            'driver_id' => $this->faker->numberBetween(1, 10),
         ];
     }
 }

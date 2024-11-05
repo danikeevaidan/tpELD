@@ -4,16 +4,21 @@ namespace App\Http\Controllers\Twill;
 
 use A17\Twill\Models\Contracts\TwillModelContract;
 
+use A17\Twill\Models\RelatedItem;
 use A17\Twill\Services\Forms\Fields\Browser;
+use A17\Twill\Services\Forms\Fields\Select;
 use A17\Twill\Services\Forms\Fields\Wysiwyg;
 use A17\Twill\Services\Listings\Columns\Browser as BrowserColumn;
 use A17\Twill\Services\Listings\Columns\Image;
+use A17\Twill\Services\Listings\Columns\Relation;
+use A17\Twill\Services\Listings\Columns\Text;
 use A17\Twill\Services\Listings\TableColumns;
 use A17\Twill\Services\Forms\Fields\Input;
 use A17\Twill\Services\Forms\Fields\Medias;
 use A17\Twill\Services\Forms\Form;
 use A17\Twill\Http\Controllers\Admin\ModuleController as BaseModuleController;
 use App\Models\Driver;
+use App\Models\Vehicle;
 
 class VehicleController extends BaseModuleController
 {
@@ -25,6 +30,23 @@ class VehicleController extends BaseModuleController
     {
         $this->disablePermalink();
         $this->disablePublish();
+    }
+
+
+    protected function getIndexTableColumns(): TableColumns
+    {
+        $table = parent::getIndexTableColumns();
+        $table->prepend(
+            Image::make()
+                ->field('cover')
+                ->title('Image')
+                ->customRender(function ($product) {
+                    return $product->medias()->get()->isNotEmpty()
+                        ? "/storage/uploads/" . $product->medias()->first()['uuid']
+                        : "/default.png";
+                })
+        );
+        return $table;
     }
 
     /**
@@ -40,18 +62,9 @@ class VehicleController extends BaseModuleController
         );
 
         $form->add(
-            Browser::make()
-                ->modules(['driver'])
-                ->buttonOnTop()
-                ->wide()
-                ->name('driver')
-                ->label('Driver')
-        );
-
-        $form->add(
             Medias::make()
                 ->name('cover')
-                ->label('Images'),
+                ->label('Images')
         );
 
         return $form;
@@ -63,11 +76,13 @@ class VehicleController extends BaseModuleController
     protected function additionalIndexTableColumns(): TableColumns
     {
         $table = parent::additionalIndexTableColumns();
-
         $table->add(
-            Image::make()
-                ->field('cover')
-                ->crop('default')
+            Text::make()
+                ->field('driver')
+                ->customRender(function ($vehicle) {
+                    return $vehicle->drivers->first()->user->name;
+            })
+                ->linkCell(fn ($vehicle) => route('twill.drivers.show', ['driver' => $vehicle->drivers->first()])),
         );
 
         return $table;

@@ -38,7 +38,7 @@ class DriverController extends BaseModuleController
         );
 
         $form->add(
-            Browser::make()->name('vehicle')->modules([Vehicle::class])
+            Browser::make()->name('vehicle')->modules([Vehicle::class])->max(2)
         );
 
         return $form;

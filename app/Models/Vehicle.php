@@ -11,7 +11,7 @@ use A17\Twill\Models\Behaviors\HasPosition;
 use A17\Twill\Models\Behaviors\Sortable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use A17\Twill\Models\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Vehicle extends Model implements Sortable
 {
@@ -44,10 +44,9 @@ class Vehicle extends Model implements Sortable
             ],
         ],
     ];
-
-    public function driver() {
-        return $this->belongsTo(Driver::class);
+    public function drivers():BelongsToMany
+    {
+        return $this->belongsToMany(Driver::class, 'twill_related', 'subject_id', 'related_id')
+            ->where('subject_type', Driver::class);
     }
-
-
 }

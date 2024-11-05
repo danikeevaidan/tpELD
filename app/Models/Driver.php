@@ -31,8 +31,4 @@ class Driver extends Model implements Sortable
     public function user(): BelongsTo {
         return $this->belongsTo(User::class, 'user_id');
     }
-
-    public function vehicle() {
-        return $this->hasOne(Vehicle::class);
-    }
 }

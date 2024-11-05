@@ -73,7 +73,7 @@ class DatabaseSeeder extends Seeder
             'published' => 1,
             'created_at' => now(),
             'name' => 'Test Admin',
-            'role' => 'SUPERADMIN',
+            'is_superadmin' => 1,
             'email' => 'test@gmail.com',
             'password' => Hash::make('password'),
             'registered_at' => now(),
