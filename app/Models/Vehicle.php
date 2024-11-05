@@ -46,7 +46,11 @@ class Vehicle extends Model implements Sortable
     ];
     public function drivers():BelongsToMany
     {
-        return $this->belongsToMany(Driver::class, 'twill_related', 'subject_id', 'related_id')
+        return $this->belongsToMany(
+            Driver::class,
+            'twill_related',
+            'subject_id',
+            'related_id')
             ->where('subject_type', Driver::class);
     }
 }

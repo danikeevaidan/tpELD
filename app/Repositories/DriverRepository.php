@@ -19,4 +19,5 @@ class DriverRepository extends ModuleRepository
     {
         $this->model = $model;
     }
+
 }

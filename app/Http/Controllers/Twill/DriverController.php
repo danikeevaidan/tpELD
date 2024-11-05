@@ -16,11 +16,16 @@ use App\Models\Vehicle;
 class DriverController extends BaseModuleController
 {
     protected $moduleName = 'drivers';
+    protected $titleFormKey = 'title';
+    protected $titleColumnKey = 'user.name';
+    protected $titleColumnLabel = 'Name';
+
     /**
      * This method can be used to enable/disable defaults. See setUpController in the docs for available options.
      */
     protected function setUpController(): void
     {
+        $this->enableSkipCreateModal();
         $this->disablePermalink();
         $this->disablePublish();
     }
@@ -34,11 +39,18 @@ class DriverController extends BaseModuleController
         $form = parent::getForm($model);
 
         $form->add(
-            Input::make()->name('description')->label('Description')
+            Input::make()
+                ->name('description')
+                ->label('Description')
         );
 
         $form->add(
-            Browser::make()->name('vehicle')->modules([Vehicle::class])->max(2)
+            Browser::make()
+                ->name('vehicle')
+                ->label('Vehicle(s)')
+                ->modules([Vehicle::class])
+                ->max(10)
+            ->wide()
         );
 
         return $form;
@@ -52,19 +64,10 @@ class DriverController extends BaseModuleController
         $table = parent::additionalIndexTableColumns();
 
         $table->add(
-            Text::make()->field('name')->title('Name')->customRender(function(Driver $driver) {
-                return $driver->user->name;
-            })
-        );
-
-        $table->add(
             BrowserColumn::make()
                 ->browser('vehicle')
                 ->field('title')
-                ->title('Vehicle')
-                ->linkCell(function($vehicle) {
-                    return route('twill.vehicles.show', ['vehicle' => $vehicle]);
-                })
+                ->title('Vehicle(s)')
         );
 
         return $table;
