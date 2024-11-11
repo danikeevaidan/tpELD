@@ -12,6 +12,7 @@ use A17\Twill\Models\Behaviors\Sortable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use A17\Twill\Models\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Driver extends Model implements Sortable
 {
@@ -30,5 +31,10 @@ class Driver extends Model implements Sortable
 
     public function user(): BelongsTo {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function schedule_entries(): HasMany
+    {
+        return $this->hasMany(DriverScheduleEntry::class);
     }
 }

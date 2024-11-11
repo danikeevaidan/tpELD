@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use A17\Twill\Models\Media;
 use App\Models\Driver;
+use App\Models\DriverScheduleEntry;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Vehicle;
@@ -29,7 +30,16 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $count = 10;
-        Driver::factory($count)->create();
+        $drivers = Driver::factory($count)->create();
+        $drivers->each(function ($driver) use ($count) {
+            $driver
+                ->schedule_entries()
+                ->saveMany(
+                    DriverScheduleEntry::factory()
+                        ->count($count*5)
+                        ->create()
+                );
+        });
         $vehicles = Vehicle::factory($count)->create();
 
 

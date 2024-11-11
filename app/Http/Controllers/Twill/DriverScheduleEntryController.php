@@ -3,32 +3,21 @@
 namespace App\Http\Controllers\Twill;
 
 use A17\Twill\Models\Contracts\TwillModelContract;
-use A17\Twill\Services\Forms\BladePartial;
-use A17\Twill\Services\Forms\Fields\Browser;
 use A17\Twill\Services\Listings\Columns\Text;
-use A17\Twill\Services\Listings\Columns\Browser as BrowserColumn;
 use A17\Twill\Services\Listings\TableColumns;
 use A17\Twill\Services\Forms\Fields\Input;
 use A17\Twill\Services\Forms\Form;
 use A17\Twill\Http\Controllers\Admin\ModuleController as BaseModuleController;
-use App\Models\Driver;
-use App\Models\Vehicle;
 
-class DriverController extends BaseModuleController
+class DriverScheduleEntryController extends BaseModuleController
 {
-    protected $moduleName = 'drivers';
-    protected $titleFormKey = 'title';
-    protected $titleColumnKey = 'user.name';
-    protected $titleColumnLabel = 'Name';
-
+    protected $moduleName = 'driverScheduleEntries';
     /**
      * This method can be used to enable/disable defaults. See setUpController in the docs for available options.
      */
     protected function setUpController(): void
     {
-        $this->enableSkipCreateModal();
         $this->disablePermalink();
-        $this->disablePublish();
     }
 
     /**
@@ -40,22 +29,7 @@ class DriverController extends BaseModuleController
         $form = parent::getForm($model);
 
         $form->add(
-            Input::make()
-                ->name('description')
-                ->label('Description')
-        );
-
-        $form->add(
-            Browser::make()
-                ->name('vehicle')
-                ->label('Vehicle(s)')
-                ->modules([Vehicle::class])
-                ->max(10)
-            ->wide()
-        );
-
-        $form->add(
-            BladePartial::make()->view('site.driver-show')->withAdditionalParams(['driver' => $model])
+            Input::make()->name('description')->label('Description')
         );
 
         return $form;
@@ -69,10 +43,7 @@ class DriverController extends BaseModuleController
         $table = parent::additionalIndexTableColumns();
 
         $table->add(
-            BrowserColumn::make()
-                ->browser('vehicle')
-                ->field('title')
-                ->title('Vehicle(s)')
+            Text::make()->field('description')->title('Description')
         );
 
         return $table;

@@ -7,3 +7,4 @@ use A17\Twill\Facades\TwillRoutes;
 
 TwillRoutes::module('vehicles');
 TwillRoutes::module('drivers');
+TwillRoutes::module('driverScheduleEntries');
