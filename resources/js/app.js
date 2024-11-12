@@ -5,40 +5,17 @@
  */
 
 import './bootstrap';
-import { createApp } from 'vue';
-import App from './App.vue';
-import { createRouter, createWebHistory } from 'vue-router';
-import routes from './routes';
+import router from './router/index.js';
 import { createApp } from 'vue';
 import App from './App.vue';
 import store from './store';
-import router from './routes';
 
 const app = createApp(App);
 app.use(store);
 app.use(router);
-app.mount('#app');
-
-const router = createRouter({
-    history: createWebHistory(),
-    routes,
-});
-
-createApp(App).use(router).mount('#app');
 
 
-createApp(App).mount('#app');
 
-/**
- * Next, we will create a fresh Vue application instance. You may then begin
- * registering components with the application instance so they are ready
- * to use in your application's views. An example is included for you.
- */
-
-const app = createApp({});
-
-import ExampleComponent from './components/ExampleComponent.vue';
-app.component('example-component', ExampleComponent);
 
 /**
  * The following block of code may be used to automatically register your
