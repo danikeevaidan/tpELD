@@ -1,12 +1,18 @@
-import ExampleComponent from "../components/ExampleComponent.vue";
 import { createRouter, createWebHistory } from 'vue-router';
+import DriverList from '../pages/DriverList.vue';
+import DriverProfile from "../pages/DriverProfile.vue";
 
 const routes = [
     {
-        name: 'example',
+        name: 'DriverList',
         path: '/',
-        component: ExampleComponent
+        component: DriverList
     },
+    {
+        name: 'DriverProfile',
+        path: '/drivers/:id',
+        component: DriverProfile
+    }
 ];
 
 const router = createRouter({
