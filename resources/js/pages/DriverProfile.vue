@@ -43,6 +43,7 @@
                 for(let entry in this.driver.schedule_entries) {
                     this.daysToDisplay.push((new Date(this.driver.schedule_entries[entry].log_time)).toLocaleDateString())
                 }
+                this.daysToDisplay.sort();
                 this.daysToDisplay = [...new Set(this.daysToDisplay)];
 
             },
