@@ -1,7 +1,7 @@
 <script>
     import axios from "axios";
-    import {useRoute} from "vue-router";
     import * as CanvasJS  from '@canvasjs/charts';
+    import store from '../store/index.js';
 
     export default {
         data: function () {
@@ -19,10 +19,7 @@
         },
 
         async mounted() {
-            const route = useRoute();
-            const id = route.params.id;
-
-            await this.getDriver(id);
+            await this.getDriver(store.getters['user/driver'].id);
             this.getWorkingDays();
             for(let day in this.daysToDisplay) {
                 this.getDriverSchedule(this.daysToDisplay[day]);
@@ -96,7 +93,6 @@
                                 }
                             }
                             const formatter = new Intl.DateTimeFormat('en', { hour: '2-digit', minute: '2-digit'});
-                            // console.log(e.dataPoints);
                             return "Status change at <b>" + formatter.format(e.entries[0].dataPoint.x) + "</b> to <b>"+ status() +"</b>";
                         }
                     },
@@ -119,11 +115,6 @@
                 this.schedules.push({day: day, options: this.options});
             },
 
-            displayChart(date) {
-                this.selectedSchedule = this.schedules.filter(function(s) {
-                    return s.day === date;
-                })[0]
-            },
             displayChartSelect(e) {
                 this.selectedSchedule = this.schedules.filter(function(s) {
                     return s.day === e.target.options[e.target.selectedIndex].value;
@@ -140,9 +131,10 @@
     <h1>
         {{ this.driver?.user?.name }}
     </h1>
-    <p>{{this.driver?.user.email}}</p>
+    <p>{{this.driver?.user?.email}}</p>
 
-    <select class="form-select my-3" aria-label="Default select example" @change="displayChartSelect">
+    <label class="form-label" for="schedule_date">Date:</label>
+    <select class="form-select my-3 w-25" id="schedule_date" aria-label="Default select example" @change="displayChartSelect">
         <option v-for="day in this.daysToDisplay" :value="day">{{day}}</option>
     </select>
 
