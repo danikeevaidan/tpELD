@@ -28,9 +28,9 @@ class DriverController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Driver $driver): JsonResponse
+    public function show(int $id): JsonResponse
     {
-        $d = Driver::with(['user', 'schedule_entries'])->find($driver->id);
+        $d = Driver::with(['user', 'schedule_entries'])->find($id);
         return response()->json($d);
     }
 

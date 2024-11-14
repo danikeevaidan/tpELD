@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
                 ->schedule_entries()
                 ->saveMany(
                     DriverScheduleEntry::factory()
-                        ->count($count*5)
+                        ->count($count*4)
                         ->create()
                 );
         });

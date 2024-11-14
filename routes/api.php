@@ -5,5 +5,5 @@ use App\Http\Controllers\EldDataController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/drivers', [DriverController::class, 'index']);
-Route::get('/drivers/{driver}', [DriverController::class, 'show']);
+Route::get('/drivers/{int:id}', [DriverController::class, 'show']);
 Route::post('/eld-data', [EldDataController::class, 'store']);

@@ -20,6 +20,7 @@ class DriverScheduleEntryFactory extends Factory
         return [
             'driver_id' => $this->faker->numberBetween(1, 10),
             'status' => $this->faker->randomElement(DriverScheduleEntry::STATUSES),
+            'log_time' => $this->faker->dateTimeBetween('-2 week'),
             'latitude' => $this->faker->randomFloat(5, -90, 90),
             'longitude' => $this->faker->randomFloat(5, -180, 180),
             'description' => $this->faker->randomElement([$this->faker->paragraph(), null, null])
