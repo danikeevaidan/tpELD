@@ -43,7 +43,9 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $user = User::with('driver')->where('email', $request['email'])->firstOrFail();
+        $user = User::with(['driver'])
+            ->where('email', $request['email'])
+            ->firstOrFail();
 
         $token = $user->createToken('auth_token')->plainTextToken;
 

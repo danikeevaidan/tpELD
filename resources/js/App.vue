@@ -4,7 +4,7 @@
 
 <template>
     <div>
-        <NavBar :isAuthenticated="isUserLoggedIn" :userName="userName" @logout="handleLogout" />
+        <NavBar/>
         <div class="container">
             <router-view v-slot="{ Component, route }">
                 <div :key="route.name">

@@ -4,7 +4,7 @@ export default {
     namespaced: true,
     state: () => ({
         user: false,
-        driver: false,
+        driver: 'DRIVER',
         admin: false,
         token: localStorage.getItem("token") || null,
     }),
@@ -30,9 +30,9 @@ export default {
     actions: {
         async login({ commit }, credentials) {
             const response = await authService.login(credentials);
+            console.log(response);
             commit('setToken', response.data.access_token);
             commit('setUser', response.data.user);
-            console.log("DRIVER FROM RESPONSE", response.data.user);
             commit('setDriver', response.data.user.driver);
             return response.data;
         },
@@ -46,8 +46,9 @@ export default {
             commit('setUser', response.data);
             return response.data;
         },
-        logout({ commit }) {
-            const response = authService.logout();
+        logout({ commit, state }) {
+            console.log("TOKEN", state.token);
+            const response = authService.logout(state.token);
             commit('logout');
             return response;
         }

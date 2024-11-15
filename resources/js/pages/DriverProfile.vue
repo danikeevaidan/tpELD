@@ -133,12 +133,17 @@
     </h1>
     <p>{{this.driver?.user?.email}}</p>
 
-    <label class="form-label" for="schedule_date">Date:</label>
-    <select class="form-select my-3 w-25" id="schedule_date" aria-label="Default select example" @change="displayChartSelect">
-        <option v-for="day in this.daysToDisplay" :value="day">{{day}}</option>
-    </select>
+    <div v-if="schedules.length>0">
+        <label class="form-label" for="schedule_date">Date:</label>
+        <select class="form-select my-3 w-25" id="schedule_date" aria-label="Default select example" @change="displayChartSelect">
+            <option v-for="day in this.daysToDisplay" :value="day">{{day}}</option>
+        </select>
 
-    <CanvasJSChart class="my-3" :options="this.selectedSchedule?.options" :style="styleOptions"/>
+        <CanvasJSChart class="my-3" :options="this.selectedSchedule?.options" :style="styleOptions"/>
+    </div>
+    <div v-else>
+        <h3>You do not have any schedule history</h3>
+    </div>
 
 </template>
 

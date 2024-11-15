@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import DriverList from '../pages/DriverList.vue';
+import Home from '../pages/Home.vue';
 import DriverProfile from "../pages/DriverProfile.vue";
 import Register from '../pages/Register.vue';
 import Login from '../pages/Login.vue';
@@ -7,9 +7,9 @@ import About from '../pages/About.vue';
 
 const routes = [
     {
-        name: 'DriverList',
+        name: 'Home',
         path: '/',
-        component: DriverList
+        component: Home
     },
     {
         name: 'DriverProfile',

@@ -1,5 +1,6 @@
 <script >
   import axios from "axios";
+  import store from "../store/index.js";
 
   export default {
     data: function () {
@@ -8,15 +9,10 @@
       }
     },
     mounted() {
-      this.getDrivers();
+        console.log("USER/DRIVER", store.getters['user/driver']);
     },
     methods: {
-      getDrivers() {
-        axios.get('/api/drivers')
-            .then(res => {
-              this.drivers = res.data;
-            })
-      }
+
     }
   }
 

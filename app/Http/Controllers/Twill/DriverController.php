@@ -38,26 +38,7 @@ class DriverController extends BaseModuleController
     public function getForm(TwillModelContract $model): Form
     {
         $form = parent::getForm($model);
-
-        $form->add(
-            Input::make()
-                ->name('description')
-                ->label('Description')
-        );
-
-        $form->add(
-            Browser::make()
-                ->name('vehicle')
-                ->label('Vehicle(s)')
-                ->modules([Vehicle::class])
-                ->max(10)
-            ->wide()
-        );
-
-        $form->add(
-            BladePartial::make()->view('site.driver-show')->withAdditionalParams(['driver' => $model])
-        );
-
+        $form->renderBaseForm()->render();
         return $form;
     }
 

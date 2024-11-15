@@ -1,10 +1,11 @@
 import axios from '../plugins/axios.js';
+import store from '../store/index.js';
 
 const apiClient = axios.create({
     withCredentials: true,
     headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
     }
 });
 export default {
@@ -16,8 +17,10 @@ export default {
         return apiClient.post('/api/login', credentials);
     },
 
-    async logout() {
-        return apiClient.post('/api/logout');
+    async logout(token) {
+        return apiClient.post('/api/logout', {}, {
+            headers: {Authorization: `Bearer ${token}`}
+        });
     },
 
     async getUser() {

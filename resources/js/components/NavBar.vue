@@ -8,17 +8,24 @@ export default {
             isAuthenticated: false,
         }
     },
+    beforeMount() {
+
+    },
     mounted() {
-        console.log(store.getters['user/user'])
+        let user = store.getters['user/user'];
+        this.user = user;
+        this.isAuthenticated = Boolean(user);
         this.getUser();
-        // this.props.isAuthenticated = store.getters.getUser;
+
     },
     methods: {
         getUser() {
-            this.user = store.getters['user/user'];
-            this.isAuthenticated = Boolean(this.user)
+            let user = store.getters['user/user'];
+            this.user = user;
+            this.isAuthenticated = Boolean(user);
         },
         async logout() {
+            this.isAuthenticated = false;
             await store.dispatch('user/logout');
             router.push('/');
         },
