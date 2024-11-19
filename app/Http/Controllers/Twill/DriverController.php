@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Twill;
 use A17\Twill\Models\Contracts\TwillModelContract;
 use A17\Twill\Services\Forms\BladePartial;
 use A17\Twill\Services\Forms\Fields\Browser;
+use A17\Twill\Services\Forms\Fieldset;
+use A17\Twill\Services\Forms\Fieldsets;
 use A17\Twill\Services\Listings\Columns\Text;
 use A17\Twill\Services\Listings\Columns\Browser as BrowserColumn;
 use A17\Twill\Services\Listings\TableColumns;
@@ -38,7 +40,14 @@ class DriverController extends BaseModuleController
     public function getForm(TwillModelContract $model): Form
     {
         $form = parent::getForm($model);
-        $form->renderBaseForm()->render();
+        $form->addFieldset(
+            Fieldset::make()->title($this->titleFormKey)
+                ->fields([
+                    Input::make()->name('user name'),
+                    Input::make()->name('user email')
+                ])
+        );
+
         return $form;
     }
 

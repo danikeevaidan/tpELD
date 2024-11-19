@@ -25,6 +25,7 @@
                 this.getDriverSchedule(this.daysToDisplay[day]);
             }
             this.selectedSchedule = this.schedules[0];
+            this.selectedSchedule.options.title.text = (new Date(this.schedules[0].day)).toDateString();
 
         },
         methods: {
@@ -38,9 +39,9 @@
 
             getWorkingDays() {
                 for(let entry in this.driver.schedule_entries) {
-                    this.daysToDisplay.push((new Date(this.driver.schedule_entries[entry].log_time)).toLocaleDateString())
+                    this.daysToDisplay.push((new Date(this.driver.schedule_entries[entry].log_time)).toDateString())
                 }
-                this.daysToDisplay.sort();
+                this.daysToDisplay;
                 this.daysToDisplay = [...new Set(this.daysToDisplay)];
 
             },
@@ -49,7 +50,7 @@
                 let date;
                 let entries = this.driver.schedule_entries.filter(function (entry) {
                     date = new Date(entry.log_time);
-                    return date.toLocaleDateString() === day;
+                    return date.toDateString() === day;
                 }).sort()
                 this.options = {
                     theme: "light2",
@@ -102,7 +103,6 @@
                     }],
                 };
                 this.options.data[0].dataPoints = [];
-                this.options.title.text = `Driver Schedule (${date.toDateString()})`;
 
                 for(let i in entries) {
                     let log_time = new Date(entries[i].log_time);
@@ -116,12 +116,13 @@
             },
 
             displayChartSelect(e) {
+                let date_value = e.target.options[e.target.selectedIndex].value;
                 this.selectedSchedule = this.schedules.filter(function(s) {
-                    return s.day === e.target.options[e.target.selectedIndex].value;
+                    return s.day === date_value;
                 })[0]
+                this.selectedSchedule.options.title.text = (new Date(date_value)).toDateString()
 
             }
-
         }
     }
 
@@ -134,10 +135,12 @@
     <p>{{this.driver?.user?.email}}</p>
 
     <div v-if="schedules.length>0">
-        <label class="form-label" for="schedule_date">Date:</label>
-        <select class="form-select my-3 w-25" id="schedule_date" aria-label="Default select example" @change="displayChartSelect">
-            <option v-for="day in this.daysToDisplay" :value="day">{{day}}</option>
-        </select>
+        <div class="mb-4">
+            <label class="form-label" for="schedule_date">Date:</label>
+            <select class="form-select mx-4 w-25 d-inline" id="schedule_date" aria-label="Default select example" @change="displayChartSelect">
+                <option v-for="day in this.daysToDisplay" :value="day">{{day}}</option>
+            </select>
+        </div>
 
         <CanvasJSChart class="my-3" :options="this.selectedSchedule?.options" :style="styleOptions"/>
     </div>
