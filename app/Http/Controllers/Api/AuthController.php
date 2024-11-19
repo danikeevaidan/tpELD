@@ -6,6 +6,7 @@ use App\Models\Driver;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 
@@ -41,6 +42,19 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'Invalid login details'
             ], 401);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        if (Auth::attempt($request->only('email', 'password'))) {
+            return response()->json(['message' => 'Login successful!'], 200);
         }
 
         $user = User::with(['driver'])
