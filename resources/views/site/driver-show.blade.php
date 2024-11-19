@@ -1,9 +1,4 @@
 @extends('twill::layouts.form')
 @section('contentFields')
-
-    <x-twill::input
-        name="title"
-        label="Title"
-        :max-length="100"
-    />
+    <a17-custom-hello-world name="World"></a17-custom-hello-world>
 @stop
