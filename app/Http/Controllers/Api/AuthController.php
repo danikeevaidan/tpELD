@@ -38,11 +38,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            return response()->json([
-                'message' => 'Invalid login details'
-            ], 401);
-        }
+
 
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
@@ -53,21 +49,23 @@ class AuthController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        if (Auth::attempt($request->only('email', 'password'))) {
-            return response()->json(['message' => 'Login successful!'], 200);
-        }
-
         $user = User::with(['driver'])
             ->where('email', $request['email'])
             ->firstOrFail();
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        if (Auth::attempt($request->only('email', 'password'))) {
+            return response()->json([
+                'user' => $user,
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'message' => 'Login successful!'
+            ], 200);
+        }
         return response()->json([
-            'user' => $user,
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-        ]);
+            'message' => 'Invalid login details'
+        ], 401);
     }
 
     public function logout(Request $request)

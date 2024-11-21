@@ -13,20 +13,21 @@ export default {
     methods: {
         async login() {
             try{
-                await store.dispatch('user/login', {
+                let data = await store.dispatch('user/login', {
                     'email': this.email,
                     'password': this.password
                 });
 
-                this.loginSuccessMessage = response.data.message;
-                this.loginErrors = {};
+                // this.loginSuccessMessage = data.message;
+                // this.loginErrors = {};
 
                 router.push('/');
             }catch (error){
-                if (error.response && error.response.status === 422 || error.response.status === 401) {
-                    this.loginErrors = error.response.data.errors;
-                    this.loginSuccessMessage = '';
-                }
+                console.log(error);
+                // if (error.response && error.response.status === 422 || error.response.status === 401) {
+                //     this.loginErrors = error.response.data.errors;
+                //     this.loginSuccessMessage = '';
+                // }
             }
         },
     }

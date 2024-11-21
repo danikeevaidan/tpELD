@@ -12,9 +12,6 @@ export default {
 
     },
     mounted() {
-        let user = store.getters['user/user'];
-        this.user = user;
-        this.isAuthenticated = Boolean(user);
         this.getUser();
 
     },
@@ -59,7 +56,7 @@ export default {
                         <a class="nav-link" href="/">Home</a>
                     </li>
 
-                    <li class="nav-item">
+                    <li v-if="isAuthenticated" class="nav-item">
                         <a class="nav-link" href="/eld-simulator">ELD Simulator</a>
                     </li>
 

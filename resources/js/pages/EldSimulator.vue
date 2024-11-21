@@ -6,6 +6,7 @@
         data() {
             return {
                 currentStatus: null,
+                message: ''
             };
         },
         methods: {
@@ -16,7 +17,7 @@
                         status: status,
                         driver_id: store.getters['user/driver'].id,
                         log_time: new Date(),
-                        description: 'Some Description',
+                        description: this.message,
                         latitude: 40,
                         longitude: 45
                     }, {
@@ -25,6 +26,7 @@
                     .then(res => {
                         console.log(res);
                     })
+                this.message = '';
             },
         },
     };
@@ -67,5 +69,9 @@
         <p class="mt-4" v-if="currentStatus">
             <strong>Current Status:</strong> {{ currentStatus }}
         </p>
+        <div class="form-control mt-3">
+            <label for="message" class="form-label">Message</label>
+            <textarea name="message" id="message" cols="15" rows="10" class="form-control mt-4" v-model="message"></textarea>
+        </div>
     </div>
 </template>
