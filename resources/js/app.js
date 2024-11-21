@@ -11,11 +11,16 @@ import App from './App.vue';
 import store from './store';
 import CanvasJSChart from '@canvasjs/vue-charts';
 import * as vue from './components/App.vue';
+import ToastPlugin from 'vue-toast-notification';
+// Import one of the available themes
+//import 'vue-toast-notification/dist/theme-default.css';
+import 'vue-toast-notification/dist/theme-bootstrap.css';
 
 
 const app = createApp(App);
 app.use(store);
 app.use(router);
+app.use(ToastPlugin);
 app.use(CanvasJSChart);
 
 

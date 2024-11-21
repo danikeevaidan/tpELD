@@ -9,13 +9,14 @@ use A17\Twill\Models\Model;
 class DriverScheduleEntry extends Model
 {
     use HasRevisions, HasFactory;
-    const STATUSES = [1, 2, 3, 4];
+    const STATUSES = ['driving', 'on_duty', 'off_duty', 'resting'];
     protected $fillable = [
         'published',
         'title',
         'description',
         'driver_id',
         'status',
+        'log_time',
         'longitude',
         'latitude'
     ];

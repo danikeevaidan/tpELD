@@ -4,6 +4,8 @@ import DriverProfile from "../pages/DriverProfile.vue";
 import Register from '../pages/Register.vue';
 import Login from '../pages/Login.vue';
 import About from '../pages/About.vue';
+import EldSimulator from "../pages/EldSimulator.vue";
+
 
 const routes = [
     {
@@ -30,6 +32,11 @@ const routes = [
         name: 'About',
         path: '/about',
         component: About
+    },
+    {
+        name: 'Eld-Simulator',
+        path: '/eld-simulator',
+        component: EldSimulator
     }
 ];
 
