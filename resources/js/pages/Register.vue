@@ -8,7 +8,9 @@ export default {
             name: '',
             email: '',
             password: '',
-            password_confirmation: ''
+            password_confirmation: '',
+            registerErrors: {},
+            registerSuccessMessage: ''
         };
     },
     methods: {
@@ -21,6 +23,9 @@ export default {
                     password_confirmation: this.password_confirmation
                 });
 
+                this.successMessage = response.data.message;
+                this.errors = {};
+
                 await store.dispatch('user/login', {
                     'email': this.email,
                     'password': this.password
@@ -28,6 +33,10 @@ export default {
 
                 router.push('/');
             } catch (error) {
+                if (error.response && error.response.status === 401) {
+                    this.registerErrors = error.response.data.errors;
+                    this.registerSuccessMessage = '';
+                }
                 console.error('Registration error:', error);
             }
         }
@@ -41,13 +50,21 @@ export default {
         <form @submit.prevent="register" class="w-50">
             <input v-model="name" type="text" placeholder="Name" class="form-control mb-3">
             <input v-model="email" type="email" placeholder="Email" class="form-control mb-3">
+            <span v-if="registerErrors.email" class="error">{{ registerErrors.email[0] }}</span>
             <input v-model="password" type="password" placeholder="Password" class="form-control mb-3">
+            <span v-if="registerErrors.password" class="error">{{ registerErrors.password[0] }}</span>
             <input v-model="password_confirmation" type="password" placeholder="Confirm Password" class="form-control mb-3">
             <button type="submit" class="btn btn-primary">Register</button>
         </form>
+        <p v-if="registerSuccessMessage" class="success">{{ registerSuccessMessage }}</p>
     </div>
 </template>
 
 <style scoped>
-
+    .error {
+        color: red;
+    }
+    .success {
+        color: green;
+    }
 </style>
