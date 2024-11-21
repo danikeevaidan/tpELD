@@ -6,15 +6,24 @@
         data() {
             return {
                 currentStatus: null,
-                message: ''
+                message: '',
+                statuses: {
+                    'Driving': 1,
+                    'On Duty': 2,
+                    'Off Duty': 3,
+                    'Resting': 4,
+                }
             };
+        },
+        mounted() {
+            this.currentStatus = store.getters['user/status'];
         },
         methods: {
             async setStatus(status) {
                 this.currentStatus = status;
 
                 await _axios.post('/api/schedule-entries', {
-                        status: status,
+                        status: this.statuses[status],
                         driver_id: store.getters['user/driver'].id,
                         log_time: new Date(),
                         description: this.message,
@@ -40,28 +49,28 @@
             <button
                 type="button"
                 class="btn btn-primary"
-                @click="setStatus('driving')"
+                @click="setStatus('Driving')"
             >
                 Driving
             </button>
             <button
                 type="button"
                 class="btn btn-secondary"
-                @click="setStatus('on_duty')"
+                @click="setStatus('On Duty')"
             >
                 On-Duty
             </button>
             <button
                 type="button"
                 class="btn btn-success"
-                @click="setStatus('off_duty')"
+                @click="setStatus('Off Duty')"
             >
                 Off-Duty
             </button>
             <button
                 type="button"
                 class="btn btn-danger"
-                @click="setStatus('resting')"
+                @click="setStatus('Resting')"
             >
                 Resting
             </button>

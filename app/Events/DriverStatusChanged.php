@@ -23,7 +23,7 @@ class DriverStatusChanged implements ShouldBroadcast
     /**
      * Create a new event instance.
      */
-    public function __construct(public string $message){}
+    public function __construct(public string $message, public string $message_type){}
 
     /**
      * Get the channels the event should broadcast on.

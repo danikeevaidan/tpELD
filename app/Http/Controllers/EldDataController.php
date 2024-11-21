@@ -23,7 +23,6 @@ class EldDataController extends Controller
             'longitude' => 'required|numeric|between:-180,180'
         ]);
 
-        event(new DriverStatusChanged('Your status has been changed'));
 
         if ($validator->fails()) {
             return response()->json([

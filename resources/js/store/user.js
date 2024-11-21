@@ -4,7 +4,8 @@ export default {
     namespaced: true,
     state: () => ({
         user: false,
-        driver: 'DRIVER',
+        driver: null,
+        status: null,
         admin: false,
         token: localStorage.getItem("token") || null,
     }),

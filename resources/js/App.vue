@@ -11,13 +11,13 @@
     let channel = pusher.subscribe("driver-notification-channel");
     channel.bind("driver-status-changed", (data) => {
         console.log("DATA", data);
-        displayNotification(data.message);
+        displayNotification(data);
     });
 
-    let displayNotification = (message) => {
+    let displayNotification = (data) => {
         const $toast = useToast();
-        let instance = $toast.default(message, {
-            type: 'info',
+        let instance = $toast.default(data.message, {
+            type: data.message_type,
             position:'top',
             queue: true
         });
