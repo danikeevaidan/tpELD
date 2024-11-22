@@ -15,9 +15,11 @@ class NotConsecutiveDuplicate implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if ($value == auth()->user()->driver->schedule_entries->last()->status) {
-            $status = DriverScheduleEntry::STATUS_LABELS[$value-1];
-            $fail('The status is already ' . "\"$status\"");
+        if (auth()->user()->driver->schedule_entries->count() > 0) {
+            if ($value == auth()->user()->driver->schedule_entries->last()->status) {
+                $status = DriverScheduleEntry::STATUS_LABELS[$value-1];
+                $fail('The status is already ' . "\"$status\"");
+            }
         }
     }
 }

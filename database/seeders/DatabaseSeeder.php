@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use A17\Twill\Models\Media;
 use App\Models\Driver;
 use App\Models\DriverScheduleEntry;
+use App\Models\Notification;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Vehicle;
@@ -24,12 +25,18 @@ class DatabaseSeeder extends Seeder
     {
          User::factory(10)->create();
 
-        User::factory()->create([
+        $users = User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
 
         $count = 10;
+        $users->each(function ($user) use ($count) {
+           $user->notifications()->saveMany(
+               Notification::factory()->count($count)->make()
+           );
+        });
+
         $drivers = Driver::factory($count)->create();
         $drivers->each(function ($driver) use ($count) {
             $driver

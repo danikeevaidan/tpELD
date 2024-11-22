@@ -1,31 +1,50 @@
 <script>
 import store from '../store/index.js';
 import router from '../router/index.js';
+import _axios from "../plugins/axios.js";
 export default {
     data() {
         return {
             user: false,
             isAuthenticated: false,
+            notifications: [],
+            unread: []
         }
     },
-    beforeMount() {
 
-    },
     mounted() {
         this.getUser();
-
     },
     methods: {
         getUser() {
             let user = store.getters['user/user'];
             this.user = user;
             this.isAuthenticated = Boolean(user);
+            this.notifications = store.getters['user/notifications'];
+            this.getUnread();
+            console.log("UNREAD COUNT", this.count_unread);
         },
         async logout() {
             this.isAuthenticated = false;
             await store.dispatch('user/logout');
             router.push('/');
         },
+        getUnread() {
+            this.unread = this.notifications.filter((value) => {
+                return value.isRead === 0;
+            })
+        },
+        markAsRead(index) {
+            let notification = this.notifications[index];
+            if (!notification.isRead) {
+                _axios.put('/api/read-notification', {id: notification.id})
+                    .then(res => {
+                        console.log(res);
+                    })
+                store.dispatch('user/markAsRead', index)
+                this.getUnread();
+            }
+        }
     },
 };
 </script>
@@ -83,6 +102,43 @@ export default {
                         </ul>
                     </li>
 
+                    <li v-if="isAuthenticated">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item dropdown">
+                                <a
+                                    class="nav-link dropdown-toggle"
+                                    href="#"
+                                    id="notificationDropdown"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    Notifications <span class="badge bg-success" v-if="notifications.length>0">{{ unread.length }}</span>
+                                </a>
+                                <ul
+                                    class="dropdown-menu dropdown-menu-end overflow-x-hidden overflow-y-scroll"
+                                    style="width: 25rem; height: 25rem"
+                                    aria-labelledby="notificationDropdown"
+                                >
+                                    <li v-if="notifications.length === 0">
+                                        <span class="dropdown-item-text text-muted">No notifications</span>
+                                    </li>
+                                    <li v-for="(notification, index) in notifications" :key="index">
+                                        <a
+                                            href="#"
+                                            class="dropdown-item"
+                                            @click.prevent="markAsRead(index)"
+                                            v-bind:class='notification.isRead?"":"bg-success-subtle text-success-emphasis"'
+                                        >
+                                            <p class="m-0 fw-bold">{{ notification.message }}</p>
+                                            <span class="fs-6 text-muted">{{ notification.created_at}}</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
                     <li v-if="!isAuthenticated" class="nav-item">
                         <a class="nav-link" href="/login">Login</a>
                     </li>
@@ -90,6 +146,9 @@ export default {
                         <a class="nav-link" href="/register">Register</a>
                     </li>
                 </ul>
+
+<!--                <div class="collapse navbar-collapse" id="navbarNav">-->
+<!--                </div>-->
             </div>
         </div>
     </nav>

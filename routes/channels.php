@@ -3,7 +3,7 @@
 use App\Models\User;
 use Illuminate\Support\Facades\Broadcast;
 
-Broadcast::channel('driver-notification-channel', function (User $user) {
+Broadcast::channel('driver-notification-channel-{id}', function (User $user, int $id) {
     return true;
 });
 

@@ -18,16 +18,16 @@ export default {
                     'password': this.password
                 });
 
-                // this.loginSuccessMessage = data.message;
-                // this.loginErrors = {};
+                this.loginSuccessMessage = data.message;
+                this.loginErrors = {};
 
                 router.push('/');
             }catch (error){
                 console.log(error);
-                // if (error.response && error.response.status === 422 || error.response.status === 401) {
-                //     this.loginErrors = error.response.data.errors;
-                //     this.loginSuccessMessage = '';
-                // }
+                if (error.response && error.response.status === 422 || error.response.status === 401) {
+                    this.loginErrors = error.response.data.errors;
+                    this.loginSuccessMessage = '';
+                }
             }
         },
     }

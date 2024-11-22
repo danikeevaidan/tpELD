@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\LoginRequest;
 use App\Models\Driver;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -36,20 +37,9 @@ class AuthController extends Controller
         ]);
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-
-
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $user = User::with(['driver'])
+        $user = User::with(['driver', 'notifications'])
             ->where('email', $request['email'])
             ->firstOrFail();
 

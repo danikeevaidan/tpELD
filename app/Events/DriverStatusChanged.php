@@ -23,7 +23,7 @@ class DriverStatusChanged implements ShouldBroadcast
     /**
      * Create a new event instance.
      */
-    public function __construct(public string $message, public string $message_type){}
+    public function __construct(public Driver $driver, public string $message, public string $message_type){}
 
     /**
      * Get the channels the event should broadcast on.
@@ -33,7 +33,7 @@ class DriverStatusChanged implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            'driver-notification-channel'
+            "driver-notification-channel-{$this->driver->id}"
         ];
     }
 
