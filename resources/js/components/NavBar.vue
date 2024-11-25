@@ -31,12 +31,12 @@ export default {
         },
         getUnread() {
             this.unread = this.notifications.filter((value) => {
-                return value.isRead === 0;
+                return value.read_at == null;
             })
         },
         markAsRead(index) {
             let notification = this.notifications[index];
-            if (!notification.isRead) {
+            if (!notification.read_at) {
                 _axios.put('/api/read-notification', {id: notification.id})
                     .then(res => {
                         console.log(res);
@@ -113,7 +113,7 @@ export default {
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false"
                                 >
-                                    Notifications <span class="badge bg-success" v-if="notifications.length>0">{{ unread.length }}</span>
+                                    Notifications <span class="badge bg-success" v-if="unread.length>0">{{ unread.length }}</span>
                                 </a>
                                 <ul
                                     class="dropdown-menu dropdown-menu-end overflow-x-hidden overflow-y-scroll"
@@ -128,7 +128,7 @@ export default {
                                             href="#"
                                             class="dropdown-item"
                                             @click.prevent="markAsRead(index)"
-                                            v-bind:class='notification.isRead?"":"bg-success-subtle text-success-emphasis"'
+                                            v-bind:class='!(notification.read_at==null)?"":"bg-success-subtle text-success-emphasis"'
                                         >
                                             <p class="m-0 fw-bold">{{ notification.message }}</p>
                                             <span class="fs-6 text-muted">{{ notification.created_at}}</span>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Events\DriverStatusChanged;
 use App\Http\Controllers\Controller;
+use App\Models\Driver;
 use App\Models\DriverScheduleEntry;
 use App\Rules\NotConsecutiveDuplicate;
 use DateTime;
@@ -86,5 +87,9 @@ class ScheduleEntryController extends Controller
     public function destroy(DriverScheduleEntry $driverScheduleEntry)
     {
         //
+    }
+
+    public function test(int $id, string $message) {
+        event(new DriverStatusChanged(Driver::find($id), $message, 'infor'));
     }
 }

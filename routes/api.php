@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\DriverController;
 use App\Http\Controllers\Api\ScheduleEntryController;
 use App\Http\Controllers\EldDataController;
 use App\Http\Controllers\NotificationController;
+use App\Models\Driver;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/drivers', [DriverController::class, 'index']);
@@ -20,3 +22,7 @@ Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logo
 Route::middleware('auth:sanctum')->get('/profile', [AuthController::class, 'profile']);
 
 Route::put('/read-notification', [NotificationController::class, 'readNotification']);
+
+Route::get('/test', function (Request $request) {
+    event(new DriverStatusChanged(Driver::find($request->id), $request->message, 'info'));
+});

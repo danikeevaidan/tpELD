@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,7 +20,7 @@ class NotificationFactory extends Factory
         return [
             'message' => $this->faker->sentence(),
             'message_type' => $this->faker->randomElement(['info', 'warning', 'error']),
-            'isRead' => $this->faker->boolean(),
+            'read_at' => $this->faker->randomElement([null, new Carbon()]),
         ];
     }
 }

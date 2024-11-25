@@ -25,12 +25,4 @@ class Notification extends Model
         return $this->belongsTo(User::class);
     }
 
-    protected function createdAt(): Attribute
-    {
-        return Attribute::make(
-            get: fn (string $value) => (new Carbon($value))->diffForHumans(),
-        );
-    }
-
-//    public function
 }

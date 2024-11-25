@@ -7,7 +7,7 @@ export default {
         driver: null,
         status: null,
         admin: false,
-        token: localStorage.getItem("token") || null,
+        token: null,
         notifications: []
     }),
     mutations: {
@@ -33,7 +33,7 @@ export default {
             state.notifications = notifications;
         },
         markAsRead(state, index) {
-            state.notifications[index].isRead = true;
+            state.notifications[index].read_at = new Date();
         }
     },
     actions: {
