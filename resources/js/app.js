@@ -7,8 +7,10 @@
 import './bootstrap';
 import router from './router/index.js';
 import { createApp } from 'vue';
+import VueGoogleMaps from '@fawmi/vue-google-maps';
 import App from './App.vue';
 import store from './store';
+import MapComponent from './components/MapComponent.vue';
 import CanvasJSChart from '@canvasjs/vue-charts';
 import * as vue from './components/App.vue';
 
@@ -18,7 +20,13 @@ app.use(store);
 app.use(router);
 app.use(CanvasJSChart);
 
-
+app.use(VueGoogleMaps, {
+    load: {
+        key: '', //TODO: add API key in here
+        libraries: 'places',
+    },
+});
+app.component('map-component', MapComponent);
 
 
 /**

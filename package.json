@@ -21,6 +21,7 @@
     },
     "dependencies": {
         "@canvasjs/vue-charts": "^1.0.4",
+        "@fawmi/vue-google-maps": "^0.9.79",
         "vue-router": "^4.4.5",
         "vuex": "^4.0.2",
         "vuex-persistedstate": "^4.1.0"

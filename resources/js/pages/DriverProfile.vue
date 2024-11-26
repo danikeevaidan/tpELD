@@ -43,7 +43,6 @@
                 }
                 this.daysToDisplay;
                 this.daysToDisplay = [...new Set(this.daysToDisplay)];
-
             },
 
             getDriverSchedule(day) {
