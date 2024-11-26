@@ -1,17 +1,20 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Events\DriverStatusChanged;
 use App\Models\EldData;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Pusher\Pusher;
 
 class EldDataController extends Controller
 {
     public function store(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'driver_id' => 'required|exists:drivers,id',
             'log_time' => 'required|date',
@@ -19,6 +22,7 @@ class EldDataController extends Controller
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180'
         ]);
+
 
         if ($validator->fails()) {
             return response()->json([

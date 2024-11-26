@@ -1,7 +1,7 @@
 <script>
 import authService from '../services/authService';
 import router from "../router/index.js";
-import store from "@/store/index.js";
+import store from "../store/index.js";
 export default {
     data() {
         return {
@@ -23,7 +23,7 @@ export default {
                     password_confirmation: this.password_confirmation
                 });
 
-                this.successMessage = response.data.message;
+                this.successMessage = response.data;
                 this.errors = {};
 
                 await store.dispatch('user/login', {

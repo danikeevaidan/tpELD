@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\LoginRequest;
 use App\Models\Driver;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -36,38 +37,25 @@ class AuthController extends Controller
         ]);
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            return response()->json([
-                'message' => 'Invalid login details'
-            ], 401);
-        }
-
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        if (Auth::attempt($request->only('email', 'password'))) {
-            return response()->json(['message' => 'Login successful!'], 200);
-        }
-
-        $user = User::with(['driver'])
+        $user = User::with(['driver', 'notifications'])
             ->where('email', $request['email'])
             ->firstOrFail();
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        if (Auth::attempt($request->only('email', 'password'))) {
+            return response()->json([
+                'user' => $user,
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'message' => 'Login successful!'
+            ], 200);
+        }
         return response()->json([
-            'user' => $user,
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-        ]);
+            'message' => 'Invalid login details'
+        ], 401);
     }
 
     public function logout(Request $request)

@@ -26,8 +26,8 @@
             }
             this.selectedSchedule = this.schedules[0];
             this.selectedSchedule.options.title.text = (new Date(this.schedules[0].day)).toDateString();
-
         },
+
         methods: {
             async getDriver(id) {
                 await axios.get(`/api/drivers/${id}`)

@@ -31,6 +31,10 @@ export default {
                     const marker = new google.maps.Marker({
                         position: { lat: parseFloat(truck.latitude), lng: parseFloat(truck.longitude) },
                         map: this.map,
+                        mounted() {
+                            this.initMap();
+                            setInterval(this.loadTruckLocations, 10000);
+                        },
                         title: truck.name,
                     });
 

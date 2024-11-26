@@ -7,6 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>ELD</title>
     @vite(['resources/js/app.js', 'resources/sass/app.scss'])
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body>
 @if (session('success'))

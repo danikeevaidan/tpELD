@@ -4,9 +4,11 @@ export default {
     namespaced: true,
     state: () => ({
         user: false,
-        driver: 'DRIVER',
+        driver: null,
+        status: null,
         admin: false,
-        token: localStorage.getItem("token") || null,
+        token: null,
+        notifications: []
     }),
     mutations: {
         setToken(state, token) {
@@ -25,6 +27,13 @@ export default {
             state.admin = false;
             state.token = null;
             state.user = null;
+            state.notifications = [];
+        },
+        setNotifications(state, notifications) {
+            state.notifications = notifications;
+        },
+        markAsRead(state, index) {
+            state.notifications[index].read_at = new Date();
         }
     },
     actions: {
@@ -34,6 +43,7 @@ export default {
             commit('setToken', response.data.access_token);
             commit('setUser', response.data.user);
             commit('setDriver', response.data.user.driver);
+            commit('setNotifications', response.data.user.notifications)
             return response.data;
         },
         async register({ commit }, credentials) {
@@ -51,6 +61,9 @@ export default {
             const response = authService.logout(state.token);
             commit('logout');
             return response;
+        },
+        markAsRead({commit}, index) {
+            commit('markAsRead', index);
         }
     },
     getters: {
@@ -65,6 +78,9 @@ export default {
         },
         driver(state) {
             return state.driver;
+        },
+        notifications(state) {
+            return state.notifications;
         }
     }
 }
