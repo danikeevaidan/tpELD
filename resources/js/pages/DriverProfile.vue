@@ -101,11 +101,109 @@ const displayChartSelect = (e) => {
     }
 };
 
+<<<<<<< HEAD
 onMounted(async () => {
     const userDriver = store.getters["user/user"]?.driver;
     if (!userDriver) {
         console.error("No driver data found in user store");
         return;
+=======
+        methods: {
+            async getDriver(id) {
+                await axios.get(`/api/drivers/${id}`)
+                    .then(res => {
+                        this.driver = res.data
+                    })
+                    .catch(error => console.log(error))
+            },
+
+            getWorkingDays() {
+                for(let entry in this.driver.schedule_entries) {
+                    this.daysToDisplay.push((new Date(this.driver.schedule_entries[entry].log_time)).toDateString())
+                }
+                this.daysToDisplay;
+                this.daysToDisplay = [...new Set(this.daysToDisplay)];
+            },
+
+            getDriverSchedule(day) {
+                let date;
+                let entries = this.driver.schedule_entries.filter(function (entry) {
+                    date = new Date(entry.log_time);
+                    return date.toDateString() === day;
+                }).sort()
+                this.options = {
+                    theme: "light2",
+                    animationEnabled: true,
+                    exportEnabled: true,
+                    zoomEnabled:true,
+                    exportFileName: `Driver ${this.driver.user?.name} ${date}`,
+                    day: day,
+                    title: {
+                        text: ""
+                    },
+                    axisX: {
+                        title: "Time",
+                        labelFormatter: function(e) {
+                            const formatter = new Intl.DateTimeFormat('en', { hour: '2-digit', minute: '2-digit'});
+                            return formatter.format(e.value);
+                        },
+                        interval: 2
+                    },
+                    axisY: {
+                        title: "Status",
+                        labelFormatter: function(e){
+                            switch (e.value) {
+                                case 1: return 'Driving'
+                                case 2: return 'On Duty'
+                                case 3: return 'Off Duty'
+                                case 4: return 'Resting'
+                                default: return ''
+                            }
+                        },
+                    },
+                    toolTip: {
+                        contentFormatter: function (e){
+                            let status = () => {
+                                switch(e.entries[0].dataPoint.y) {
+                                    case 1: return 'Driving'
+                                    case 2: return 'On Duty'
+                                    case 3: return 'Off Duty'
+                                    case 4: return 'Resting'
+                                    default: return 'Undefined Status'
+                                }
+                            }
+                            const formatter = new Intl.DateTimeFormat('en', { hour: '2-digit', minute: '2-digit'});
+                            return "Status change at <b>" + formatter.format(e.entries[0].dataPoint.x) + "</b> to <b>"+ status() +"</b>";
+                        }
+                    },
+                    data: [{
+                        type: "stepLine",
+                        dataPoints: []
+                    }],
+                };
+                this.options.data[0].dataPoints = [];
+
+                for(let i in entries) {
+                    let log_time = new Date(entries[i].log_time);
+                    this.options.data[0].dataPoints.push({
+                        x: log_time,
+                        y: parseInt(entries[i].status, 10)
+                    });
+                }
+
+                this.schedules.push({day: day, options: this.options});
+            },
+
+            displayChartSelect(e) {
+                let date_value = e.target.options[e.target.selectedIndex].value;
+                this.selectedSchedule = this.schedules.filter(function(s) {
+                    return s.day === date_value;
+                })[0]
+                this.selectedSchedule.options.title.text = (new Date(date_value)).toDateString()
+
+            }
+        }
+>>>>>>> fe032f8f87a18d20b3c228e01216f5977b3f7237
     }
 
     await getDriver(userDriver.id);

@@ -23,6 +23,8 @@
     },
     "dependencies": {
         "@canvasjs/vue-charts": "^1.0.4",
+        "@fawmi/vue-google-maps": "^0.9.79",
+        "@pusher/push-notifications-web": "^1.1.0",
         "bootstrap-icons": "^1.11.3",
         "vue-router": "^4.4.5",
         "vue-toast-notification": "^3.1.3",

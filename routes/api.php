@@ -9,6 +9,7 @@ use App\Http\Controllers\NotificationController;
 use App\Models\Driver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use \App\Models\Vehicle;
 
 Route::get('/drivers', [DriverController::class, 'index']);
 Route::get('/drivers/{int:id}', [DriverController::class, 'show']);
@@ -25,4 +26,8 @@ Route::put('/read-notification', [NotificationController::class, 'readNotificati
 
 Route::get('/test', function (Request $request) {
     event(new DriverStatusChanged(Driver::find($request['id']), $request['message'], 'info'));
+});
+
+Route::get('/trucks', function () {
+    return Vehicle::all();
 });
