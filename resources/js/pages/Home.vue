@@ -1,20 +1,4 @@
-<script >
-  import axios from "axios";
-  import store from "../store/index.js";
-
-  export default {
-    data: function () {
-      return {
-        drivers: []
-      }
-    },
-    mounted() {
-        console.log("USER/DRIVER", store.getters['user/driver']);
-    },
-    methods: {
-
-    }
-  }
+<script setup>
 
 </script>
 

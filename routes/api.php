@@ -24,5 +24,5 @@ Route::middleware('auth:sanctum')->get('/profile', [AuthController::class, 'prof
 Route::put('/read-notification', [NotificationController::class, 'readNotification']);
 
 Route::get('/test', function (Request $request) {
-    event(new DriverStatusChanged(Driver::find($request->id), $request->message, 'info'));
+    event(new DriverStatusChanged(Driver::find($request['id']), $request['message'], 'info'));
 });

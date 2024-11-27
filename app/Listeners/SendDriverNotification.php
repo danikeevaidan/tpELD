@@ -38,9 +38,6 @@ class SendDriverNotification
             ['cluster' => env('PUSHER_APP_CLUSTER'),
                 'useTLS' => false],
         );
-        $pusher->trigger("driver-notification-channel-{$event->driver->id}", 'driver-status-changed', [
-            'message' => $event->message,
-            'message_type' => $event->message_type
-        ]);
+        $pusher->trigger("driver-notification-channel-{$event->driver->id}", 'driver-status-changed', $notification);
     }
 }

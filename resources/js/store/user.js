@@ -3,67 +3,65 @@ import authService from "../services/authService.js";
 export default {
     namespaced: true,
     state: () => ({
-        user: false,
-        driver: null,
-        status: null,
-        admin: false,
+        user: null,
         token: null,
-        notifications: []
+        status: null,
+        admin: null,
+        notifications: [],
     }),
     mutations: {
-        setToken(state, token) {
+        SET_TOKEN(state, token) {
             state.token = token;
         },
-        setUser(state, user) {
+        SET_USER(state, user) {
             state.user = user;
-        },
-        setDriver(state, driver) {
-            state.driver = driver;
-        },
-        setAdmin(state, admin) {
-            state.admin = admin;
         },
         logout(state) {
             state.admin = false;
-            state.token = null;
             state.user = null;
+            state.token = null;
             state.notifications = [];
         },
-        setNotifications(state, notifications) {
-            state.notifications = notifications;
+        SET_NOTIFICATIONS(state, notifications) {
+            state.notifications = notifications.sort((a,b)=> {
+                return Math.abs(new Date(a.created_at.replace(/-/g,'/')) - new Date(b.created_at.replace(/-/g,'/')));
+            });
+            console.log(state.notifications);
         },
-        markAsRead(state, index) {
+        MARK_AS_READ(state, index) {
             state.notifications[index].read_at = new Date();
+        },
+        ADD_NOTIFICATION(state, notification) {
+            state.notifications.unshift(notification);
         }
     },
     actions: {
         async login({ commit }, credentials) {
             const response = await authService.login(credentials);
-            console.log(response);
-            commit('setToken', response.data.access_token);
-            commit('setUser', response.data.user);
-            commit('setDriver', response.data.user.driver);
-            commit('setNotifications', response.data.user.notifications)
+            commit('SET_TOKEN', response.data.access_token)
+            commit('SET_USER', response.data.user);
+            commit('SET_NOTIFICATIONS', response.data.user.notifications);
             return response.data;
         },
         async register({ commit }, credentials) {
             const response = await authService.register(credentials);
-            commit('setToken', response.data.access_token);
             return response.data;
         },
         async fetchUser({ commit }) {
             const response = await authService.getUser();
-            commit('setUser', response.data);
+            commit('SET_USER', response.data);
             return response.data;
         },
         logout({ commit, state }) {
-            console.log("TOKEN", state.token);
             const response = authService.logout(state.token);
             commit('logout');
             return response;
         },
         markAsRead({commit}, index) {
-            commit('markAsRead', index);
+            commit('MARK_AS_READ', index);
+        },
+        addNotification({commit}, notification) {
+            commit('ADD_NOTIFICATION', notification);
         }
     },
     getters: {
@@ -73,14 +71,11 @@ export default {
         admin(state) {
             return state.admin;
         },
-        token(state) {
-            return state.token;
-        },
-        driver(state) {
-            return state.driver;
-        },
         notifications(state) {
             return state.notifications;
+        },
+        token(state) {
+            return state.token;
         }
     }
 }

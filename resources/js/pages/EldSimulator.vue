@@ -1,44 +1,51 @@
-<script>
-    import _axios from '../plugins/axios.js';
-    import store from '../store/index.js';
+<script setup>
+import { ref, computed, onMounted } from "vue";
+import _axios from "../plugins/axios.js";
+import store from "../store/index.js";
 
-    export default {
-        data() {
-            return {
-                currentStatus: null,
-                message: '',
-                statuses: {
-                    'Driving': 1,
-                    'On Duty': 2,
-                    'Off Duty': 3,
-                    'Resting': 4,
-                }
-            };
-        },
-        mounted() {
-            this.currentStatus = store.getters['user/status'];
-        },
-        methods: {
-            async setStatus(status) {
-                this.currentStatus = status;
+const currentStatus = ref(null);
+const message = ref("");
 
-                await _axios.post('/api/schedule-entries', {
-                        status: this.statuses[status],
-                        driver_id: store.getters['user/driver'].id,
-                        log_time: new Date(),
-                        description: this.message,
-                        latitude: 40,
-                        longitude: 45
-                    }, {
-                    headers: {Authorization: `Bearer ${store.getters['user/token']}`                 }
-                })
-                    .then(res => {
-                        console.log(res);
-                    })
-                this.message = '';
+const statuses = {
+    Driving: 1,
+    "On Duty": 2,
+    "Off Duty": 3,
+    Resting: 4,
+};
+
+const user = computed(() => store.getters["user/user"]);
+const token = computed(() => store.getters["user/token"]);
+
+const setStatus = async (status) => {
+    currentStatus.value = status;
+
+    try {
+        const response = await _axios.post(
+            "/api/schedule-entries",
+            {
+                status: statuses[status],
+                driver_id: user.value.driver.id,
+                log_time: new Date(),
+                description: message.value,
+                latitude: 40,
+                longitude: 45,
             },
-        },
-    };
+            {
+                headers: { Authorization: `Bearer ${token.value}` },
+            }
+        );
+        console.log(response);
+    } catch (error) {
+        console.error("Error setting status:", error);
+    } finally {
+        message.value = "";
+    }
+};
+
+onMounted(() => {
+    currentStatus.value = store.getters["user/status"];
+});
+
 </script>
 
 

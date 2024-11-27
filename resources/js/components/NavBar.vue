@@ -1,52 +1,32 @@
-<script>
+<script setup>
+
+import { ref, onMounted, computed } from 'vue';
 import store from '../store/index.js';
 import router from '../router/index.js';
-import _axios from "../plugins/axios.js";
-export default {
-    data() {
-        return {
-            user: false,
-            isAuthenticated: false,
-            notifications: [],
-            unread: []
-        }
-    },
+import _axios from '../plugins/axios.js';
 
-    mounted() {
-        this.getUser();
-    },
-    methods: {
-        getUser() {
-            let user = store.getters['user/user'];
-            this.user = user;
-            this.isAuthenticated = Boolean(user);
-            this.notifications = store.getters['user/notifications'];
-            this.getUnread();
-            console.log("UNREAD COUNT", this.count_unread);
-        },
-        async logout() {
-            this.isAuthenticated = false;
-            await store.dispatch('user/logout');
-            router.push('/');
-        },
-        getUnread() {
-            this.unread = this.notifications.filter((value) => {
-                return value.read_at == null;
-            })
-        },
-        markAsRead(index) {
-            let notification = this.notifications[index];
-            if (!notification.read_at) {
-                _axios.put('/api/read-notification', {id: notification.id})
-                    .then(res => {
-                        console.log(res);
-                    })
-                store.dispatch('user/markAsRead', index)
-                this.getUnread();
-            }
-        }
-    },
+const user = computed(() => store.getters['user/user']);
+const isAuthenticated = computed(() => Boolean(user.value));
+const notifications = computed(() => store.getters['user/notifications']);
+const unread = computed(() => notifications.value?.filter(value => value.read_at == null));
+
+const logout = async () => {
+    await store.dispatch('user/logout');
+    router.push('/');
 };
+
+const markAsRead = async (index) => {
+    const notification = notifications.value[index];
+    if (!notification.read_at) {
+        try {
+            const response = await _axios.put('/api/read-notification', { id: notification.id });
+            await store.dispatch('user/markAsRead', index);
+        } catch (error) {
+            console.error('Error marking notification as read:', error);
+        }
+    }
+};
+
 </script>
 
 

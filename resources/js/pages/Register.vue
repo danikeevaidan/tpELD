@@ -1,47 +1,46 @@
-<script>
-import authService from '../services/authService';
-import router from "../router/index.js";
-import store from "../store/index.js";
-export default {
-    data() {
-        return {
-            name: '',
-            email: '',
-            password: '',
-            password_confirmation: '',
-            registerErrors: {},
-            registerSuccessMessage: ''
-        };
-    },
-    methods: {
-        async register() {
-            try {
-                const response = await this.$store.dispatch('user/register', {
-                    name: this.name,
-                    email: this.email,
-                    password: this.password,
-                    password_confirmation: this.password_confirmation
-                });
+<script setup>
+import { ref } from "vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
-                this.successMessage = response.data;
-                this.errors = {};
 
-                await store.dispatch('user/login', {
-                    'email': this.email,
-                    'password': this.password
-                });
+const store = useStore();
+const router = useRouter();
 
-                router.push('/');
-            } catch (error) {
-                if (error.response && error.response.status === 401) {
-                    this.registerErrors = error.response.data.errors;
-                    this.registerSuccessMessage = '';
-                }
-                console.error('Registration error:', error);
-            }
+const name = ref("");
+const email = ref("");
+const password = ref("");
+const password_confirmation = ref("");
+const registerErrors = ref({});
+const registerSuccessMessage = ref("");
+
+const register = async () => {
+    try {
+        const response = await store.dispatch("user/register", {
+            name: name.value,
+            email: email.value,
+            password: password.value,
+            password_confirmation: password_confirmation.value,
+        });
+
+        registerSuccessMessage.value = response.data;
+        registerErrors.value = {};
+
+        await store.dispatch("user/login", {
+            email: email.value,
+            password: password.value,
+        });
+
+        router.push("/");
+    } catch (error) {
+        if (error.response?.status === 401) {
+            registerErrors.value = error.response.data.errors || {};
+            registerSuccessMessage.value = "";
         }
+        console.error("Registration error:", error);
     }
 };
+
 </script>
 
 <template>
@@ -50,21 +49,23 @@ export default {
         <form @submit.prevent="register" class="w-50">
             <input v-model="name" type="text" placeholder="Name" class="form-control mb-3">
             <input v-model="email" type="email" placeholder="Email" class="form-control mb-3">
-            <span v-if="registerErrors.email" class="error">{{ registerErrors.email[0] }}</span>
+<!--            <span v-if="registerErrors.email" class="error">{{ registerErrors.email[0] }}</span>-->
             <input v-model="password" type="password" placeholder="Password" class="form-control mb-3">
-            <span v-if="registerErrors.password" class="error">{{ registerErrors.password[0] }}</span>
-            <input v-model="password_confirmation" type="password" placeholder="Confirm Password" class="form-control mb-3">
+<!--            <span v-if="registerErrors.password" class="error">{{ registerErrors.password[0] }}</span>-->
+            <input v-model="password_confirmation" type="password" placeholder="Confirm Password"
+                   class="form-control mb-3">
             <button type="submit" class="btn btn-primary">Register</button>
         </form>
-        <p v-if="registerSuccessMessage" class="success">{{ registerSuccessMessage }}</p>
+<!--        <p v-if="registerSuccessMessage" class="success">{{ registerSuccessMessage }}</p>-->
     </div>
 </template>
 
 <style scoped>
-    .error {
-        color: red;
-    }
-    .success {
-        color: green;
-    }
+.error {
+    color: red;
+}
+
+.success {
+    color: green;
+}
 </style>
