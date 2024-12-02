@@ -27,7 +27,3 @@ Route::put('/read-notification', [NotificationController::class, 'readNotificati
 Route::get('/test', function (Request $request) {
     event(new DriverStatusChanged(Driver::find($request['id']), $request['message'], 'info'));
 });
-
-Route::get('/trucks', function () {
-    return Vehicle::all();
-});
