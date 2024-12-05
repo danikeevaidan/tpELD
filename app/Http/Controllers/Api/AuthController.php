@@ -70,6 +70,16 @@ class AuthController extends Controller
         ]);
     }
 
+    public function user() {
+        $user = auth()->user();
+        $notifications = $user->notifications;
+        return response()->json([
+            'user' => $user,
+            'notifications' => $notifications,
+            'driver' => $user->driver
+        ]);
+    }
+
     public function profile(Request $request): JsonResponse
     {
         return response()->json(Driver::with(['user', 'schedule_entries'])->find($request->user()->id));

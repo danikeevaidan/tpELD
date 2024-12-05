@@ -3,6 +3,17 @@
     import Pusher from 'pusher-js';
     import {useToast} from 'vue-toast-notification';
     import store from './store/index.js';
+    import {onMounted} from "vue";
+    import axios from './plugins/axios.js';
+
+    onMounted(() => {
+        if (localStorage.getItem('token')) {
+            axios.get('/api/user')
+                .then(response => {
+                    store.commit('user/SET_USER', response.data)
+                })
+        }
+    })
 
     try {
         let pusher = new Pusher("bf8f8bde31898db6f80b", {

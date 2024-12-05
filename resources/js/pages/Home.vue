@@ -60,28 +60,6 @@
             </div>
         </div>
     </section>
-    <script>
-        const beamsClient = new PusherPushNotifications.Client({
-            instanceId: '6e41251d-b3a4-4815-927b-dc35a26c6d63',
-        });
-
-        beamsClient.start()
-            .then(() => beamsClient.addDeviceInterest('hello'))
-            .then(() => console.log('Successfully registered and subscribed!'))
-            .catch(console.error);
-    </script>
-    <template>
-        <div>
-            <h1>Отслеживание траков</h1>
-            <map-component></map-component>
-        </div>
-    </template>
-
-    <script>
-        export default {
-            name: "TrackingPage",
-        };
-    </script>
 
 
     <!-- Преимущества -->

@@ -1,32 +1,23 @@
 import authService from "../services/authService.js";
+import axios from '../plugins/axios.js';
 
 export default {
     namespaced: true,
     state: () => ({
         user: null,
-        token: null,
         status: null,
-        admin: null,
         notifications: [],
     }),
     mutations: {
-        SET_TOKEN(state, token) {
-            state.token = token;
-        },
-        SET_USER(state, user) {
-            state.user = user;
-        },
-        logout(state) {
-            state.admin = false;
-            state.user = null;
-            state.token = null;
-            state.notifications = [];
-        },
-        SET_NOTIFICATIONS(state, notifications) {
-            state.notifications = notifications.sort((a,b)=> {
+        SET_USER(state, data) {
+            state.user = data.user;
+            state.notifications = data.notifications.sort((a,b)=> {
                 return Math.abs(new Date(a.created_at.replace(/-/g,'/')) - new Date(b.created_at.replace(/-/g,'/')));
             });
-            console.log(state.notifications);
+        },
+        LOGOUT(state) {
+            state.user = null;
+            state.notifications = [];
         },
         MARK_AS_READ(state, index) {
             state.notifications[index].read_at = new Date();
@@ -37,14 +28,13 @@ export default {
     },
     actions: {
         async login({ commit }, credentials) {
-            const response = await authService.login(credentials);
-            commit('SET_TOKEN', response.data.access_token)
+            const response = await axios.post('/api/login', credentials);
+            localStorage.setItem('token', response.data.access_token)
             commit('SET_USER', response.data.user);
-            commit('SET_NOTIFICATIONS', response.data.user.notifications);
             return response.data;
         },
         async register({ commit }, credentials) {
-            const response = await authService.register(credentials);
+            const response = await axios.post('/api/register', credentials);
             return response.data;
         },
         async fetchUser({ commit }) {
@@ -52,9 +42,9 @@ export default {
             commit('SET_USER', response.data);
             return response.data;
         },
-        logout({ commit, state }) {
-            const response = authService.logout(state.token);
-            commit('logout');
+        async logout({ commit, state }) {
+            const response = await axios.post('/api/logout')
+            commit('LOGOUT');
             return response;
         },
         markAsRead({commit}, index) {
@@ -68,14 +58,8 @@ export default {
         user(state){
             return state.user;
         },
-        admin(state) {
-            return state.admin;
-        },
         notifications(state) {
             return state.notifications;
-        },
-        token(state) {
-            return state.token;
         }
     }
 }

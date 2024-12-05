@@ -9,12 +9,11 @@ use App\Http\Controllers\NotificationController;
 use App\Models\Driver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use \App\Models\Vehicle;
 
 Route::get('/drivers', [DriverController::class, 'index']);
 Route::get('/drivers/{int:id}', [DriverController::class, 'show']);
 Route::post('/eld-data', [EldDataController::class, 'store']);
-
+Route::middleware('auth:sanctum')->get('/user', [AuthController::class, 'user']);
 Route::middleware('auth:sanctum')->post('/schedule-entries', [ScheduleEntryController::class, 'store']);
 
 Route::post('/register', [AuthController::class, 'register']);

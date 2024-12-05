@@ -9,14 +9,6 @@ const apiClient = axios.create({
     }
 });
 export default {
-    async register(user) {
-        return apiClient.post('/api/register', user);
-    },
-
-    async login(credentials) {
-        return apiClient.post('/api/login', credentials);
-    },
-
     async logout(token) {
         return apiClient.post('/api/logout', {}, {
             headers: {Authorization: `Bearer ${token}`}
