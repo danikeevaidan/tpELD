@@ -3,11 +3,13 @@
 namespace App\Events;
 
 use App\Models\Driver;
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -23,7 +25,7 @@ class DriverStatusChanged implements ShouldBroadcast
     /**
      * Create a new event instance.
      */
-    public function __construct(public Driver $driver, public string $message, public string $message_type){}
+    public function __construct(public Authenticatable $user, public string $message, public string $message_type){}
 
     /**
      * Get the channels the event should broadcast on.
@@ -33,7 +35,7 @@ class DriverStatusChanged implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            "driver-notification-channel-{$this->driver->id}"
+            "driver-notification-channel-{$this->user->id}"
         ];
     }
 

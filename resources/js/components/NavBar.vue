@@ -59,6 +59,10 @@ const markAsRead = async (index) => {
                         <a class="nav-link" href="/eld-simulator">ELD Simulator</a>
                     </li>
 
+                    <li v-if="isAuthenticated" class="nav-item">
+                        <a class="nav-link" href="/drivers">Drivers</a>
+                    </li>
+
                     <li class="nav-item">
                         <a class="nav-link" href="/about">About</a>
                     </li>

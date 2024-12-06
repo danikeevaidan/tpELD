@@ -14,7 +14,6 @@ const statuses = {
 };
 
 const user = computed(() => store.getters["user/user"]);
-const token = computed(() => store.getters["user/token"]);
 
 const setStatus = async (status) => {
     currentStatus.value = status;
@@ -29,9 +28,6 @@ const setStatus = async (status) => {
                 description: message.value,
                 latitude: 40,
                 longitude: 45,
-            },
-            {
-                headers: { Authorization: `Bearer ${token.value}` },
             }
         );
         console.log(response);

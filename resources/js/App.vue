@@ -3,9 +3,10 @@
     import Pusher from 'pusher-js';
     import {useToast} from 'vue-toast-notification';
     import store from './store/index.js';
-    import {onMounted} from "vue";
+    import {computed, onMounted} from "vue";
     import axios from './plugins/axios.js';
 
+    const user = computed(() => store.getters['user/user'])
     onMounted(() => {
         if (localStorage.getItem('token')) {
             axios.get('/api/user')
@@ -20,7 +21,7 @@
             cluster: "eu",
         });
 
-        let channel = pusher.subscribe("driver-notification-channel-" + store.getters['user/user']?.driver.id);
+        let channel = pusher.subscribe("driver-notification-channel-" + user.value?.id);
         channel.bind("driver-status-changed", (data) => {
             console.log('NEW NOTIFICATION', data);
             store.dispatch('user/addNotification', data)

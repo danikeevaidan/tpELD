@@ -37,10 +37,11 @@ class ScheduleEntryController extends Controller
             'longitude' => 'required|numeric|between:-180,180'
         ]);
 
-        $driver = auth()->user()->driver;
+        $user = auth()->user();
+        $driver = $user->driver;
 
         if ($validator->fails()) {
-            event(new DriverStatusChanged($driver, $validator->errors()->first(), 'error'));
+            event(new DriverStatusChanged($user, $validator->errors()->first(), 'error'));
             return response()->json($validator->errors(), 422);
         }
 
@@ -53,13 +54,13 @@ class ScheduleEntryController extends Controller
             $last_status = DriverScheduleEntry::STATUS_LABELS[$last_entry->status-1];
             $last_entry_log_time = new DateTime($last_entry->log_time);
             $period = $this_entry_log_time->diff($last_entry_log_time)->format('%d days, %h hours, %i minutes, %s seconds');
-            event(new DriverStatusChanged($driver, "Period from last status ($last_status) to current status ($current_status) is $period", 'info'));
+            event(new DriverStatusChanged($user, "Period from last status ($last_status) to current status ($current_status) is $period", 'info'));
             $entry->save();
             return response([
                 "Period from last status ($last_status) to current status ($current_status) is $period"
             ],201);
         } else {
-            event(new DriverStatusChanged($driver, "Status changed to $entry->status", 'info'));
+            event(new DriverStatusChanged($user, "Status changed to $entry->status", 'info'));
             $entry->save();
             return response(['Status changed'],201);
         }

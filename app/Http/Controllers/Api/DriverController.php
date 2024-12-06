@@ -14,7 +14,7 @@ class DriverController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json(Driver::with(['user', 'schedule_entries'])->get());
+        return response()->json(Driver::with(['user'])->get());
     }
 
     /**
